@@ -12,33 +12,39 @@ curl -i "$BASE_URL/health"
 echo "
 ---"
 
-echo "[2/5] Happy path: GET /alerts/recent"
-curl -i "$BASE_URL/alerts/recent" -H "$AUTH_HEADER"
-echo "
----"
-
-echo "[3/5] Happy path: POST /alerts"
-curl -i -X POST "$BASE_URL/alerts" \
-  -H "$AUTH_HEADER" \
+echo "[2/5] Happy path: POST /auth/login"
+curl -i -X POST "$BASE_URL/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
-    "sourceService": "core-business",
-    "alertType": "UNAUTHORIZED_ACCESS",
-    "severity": "HIGH",
-    "message": "Phat hien truy cap trai phep tai cong chinh",
-    "relatedEventId": "0196fb3d-4ad7-7d1e-9f49-5d5148d2babc"
+    "username": "admin",
+    "password": "Password123!"
   }'
 echo "
 ---"
 
-echo "[4/5] Error case: GET /alerts/recent without token"
-curl -i "$BASE_URL/alerts/recent"
+echo "[3/5] Happy path: POST /ingest"
+curl -i -X POST "$BASE_URL/ingest" \
+  -H "$AUTH_HEADER" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceType": "access",
+    "eventId": "0196fb3d-4ad7-7d1e-9f49-5d5148d2babc",
+    "gateId": "GATE-01",
+    "cardId": "RFID-2026-001",
+    "direction": "IN",
+    "decision": "ALLOW",
+    "occurredAt": "2026-05-10T08:00:00Z"
+  }'
 echo "
 ---"
 
-echo "[5/5] Error case: POST /alerts invalid payload"
-curl -i -X POST "$BASE_URL/alerts" \
-  -H "$AUTH_HEADER" \
+echo "[4/5] Happy path: GET /analytics/summary"
+curl -i "$BASE_URL/analytics/summary?fromDate=2026-05-01&toDate=2026-05-12&granularity=day" -H "$AUTH_HEADER"
+echo "
+---"
+
+echo "[5/5] Error case: POST /auth/login invalid payload"
+curl -i -X POST "$BASE_URL/auth/login" \
   -H "Content-Type: application/json" \
-  -d '{ "alertType": 12345 }'
+  -d '{ "username": "admin" }'
 echo

@@ -13,11 +13,11 @@ evidence/buoi-02/
   tool-versions.txt
   git-log.txt
   mock-screenshots/
-    req-01-*.png
-    req-02-*.png
-    req-03-*.png
-    req-04-*.png
-    req-05-*.png
+    req-01-health.png
+    req-02-login.png
+    req-03-ingest.png
+    req-04-summary.png
+    req-05-error.png
 ```
 
 ## Cách sinh report Spectral
@@ -35,6 +35,14 @@ Windows:
 ## Ảnh mock server
 
 Lab 02 chưa yêu cầu Postman. Minh chứng nên là ảnh chụp Terminal/PowerShell khi chạy `curl` tới Prism mock server.
+
+Nên chụp theo thứ tự:
+
+1. `GET /health` trả `200`.
+2. `POST /auth/login` trả `200`.
+3. `POST /ingest` trả `202`.
+4. `GET /analytics/summary` trả `200`.
+5. `POST /auth/login` thiếu `password` hoặc `POST /ingest` payload sai trả `422`.
 
 Mỗi ảnh cần thể hiện:
 
